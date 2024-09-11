@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #AFE1AF;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .product-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .product-item {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .product-item img {
+            max-width: 200px;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .product-details {
+            flex: 1;
+        }
+
+        .product-item h3 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .product-item .price {
+            color: #666;
+            font-size: 1.2em;
+            margin-top: 5px;
+        }
+
+        .product-item p {
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .add-to-cart {
+            text-decoration: none;
+            background-color: #478778;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-block;
+            margin-left: 15px;
+        }
+
+        .add-to-cart:hover {
+            background-color: #45a049;
+        }
+
+        .cart-link {
+            margin-top: 20px;
+            display: inline-block;
+            text-decoration: none;
+            color: white;
+            background-color: #478778;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .cart-link:hover {
+            background-color: whitesmoke;
+            color:#478778;
+        }
+        #add{
+          padding: 10px;
+          margin: 5px;
+          background-color:#478778;
+          display: inline-block;
+          text-decoration: none;
+          border-radius: 5px;
+          color: white;
+        }
+        #add:hover{
+            background-color: whitesmoke;
+            color: #478778;
+        }
+    </style>
+</head>
+<body>
+    <h1>Available Products</h1>
+    <a href="/logout">Logout</a>
+    <a href="/add" id="add">Add New Product</a>
+    <ul class="product-list">
+        {% for product in products %}
+            <li class="product-item">
+                {% if product.image %}
+    <img src="{{ url_for('static', filename='uploads/' ~ product.image) }}" alt="{{ product.name }}">
+{% endif %}
+
+                <div class="product-details">
+                    <h3>{{ product.name }}</h3>
+                    <span class="price">${{ product.price }}</span>
+                    <p>{{ product.description }}</p>
+                </div>
+                <a href="{{ url_for('add_to_cart', product_id=product.id) }}" class="add-to-cart">Add to Cart</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('view_cart') }}" class="cart-link">View Cart</a>
+</body>
+</html>

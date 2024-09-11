@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        /* Container for the cart items */
+        .cart-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Styling for the cart items */
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+
+        .cart-item h3 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        .cart-item .price {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        /* Styling for the remove button */
+        .remove-link {
+            text-decoration: none;
+            color: white;
+            background-color: #e74c3c;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .remove-link:hover {
+            background-color: #c0392b;
+        }
+
+        /* Total price section */
+        .total {
+            font-size: 1.4em;
+            margin-top: 20px;
+            text-align: right;
+            font-weight: bold;
+        }
+
+        /* Back to Products button */
+        .back-to-products {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            text-decoration: none;
+            color: #fff;
+            background-color: #3498db;
+            border-radius: 6px;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .back-to-products:hover {
+            background-color: #2980b9;
+        }
+
+        /* Footer styling */
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="cart-container">
+        <h1>Your Cart</h1>
+
+        <!-- Cart items -->
+        <ul>
+            {% for item in cart_items %}
+                <li class="cart-item">
+                    <div>
+                        <h3>{{ item.product.name }}</h3>
+                        <p class="price">${{ item.product.price }} x {{ item.quantity }}</p>
+                    </div>
+                    <a href="{{ url_for('remove_from_cart', cart_item_id=item.id) }}" class="remove-link">Remove</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <!-- Total price -->
+        <div class="total">
+            Total: ${{ total }}
+        </div>
+
+        <!-- Back to Products button -->
+        <a href="{{ url_for('index') }}" class="back-to-products">Back to Products</a>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Your Online Store</p>
+    </footer>
+</body>
+</html>

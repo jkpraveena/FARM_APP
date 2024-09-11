@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Reviews</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        .stars {
+            color: #FFD700;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Customer Reviews</h1>
+
+   
+   
+    {% if reviews %}
+        <ul>
+        {% for review in reviews %}
+            <li>
+                <strong>{{ review.name }}</strong>:
+                <div class="stars">
+                    {% for i in range(1, 6) %}
+                        {% if i <= review.rating %}
+                            ★
+                        {% else %}
+                            ☆
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <br>
+                {{ review.feedback }}
+            </li><br>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No reviews yet. Be the first to leave feedback!</p>
+    {% endif %}
+    <a href="/feedback">Leave a Review</a><br><br>
+</body>
+</html>

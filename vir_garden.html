@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comment Section</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000; /* Black background */
+            color: #00ff00; /* Green text */
+            margin: 0;
+            padding: 0;
+        }
+        .comment-box {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #222; /* Slightly lighter black for contrast */
+            border-radius: 4px;
+        }
+        .comment-input,
+        .username-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #333; /* Darker border for contrast */
+            background-color: #333; /* Dark background for input */
+            color: #00ff00; /* Green text for input */
+        }
+        .file-input {
+            margin-bottom: 10px;
+        }
+        .submit-btn {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background-color: #218838;
+        }
+        .comments-list {
+            margin-top: 30px;
+        }
+        .comment {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            background-color: #222; /* Slightly lighter black for contrast */
+            border: 1px solid #333; /* Darker border for contrast */
+            position: relative;
+        }
+        .comment .username {
+            font-weight: bold;
+        }
+        .comment img,
+        .comment video {
+            max-width: 100%;
+            border-radius: 4px;
+        }
+        .like-dislike {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .like-dislike button {
+            background: none;
+            border: none;
+            color: #00ff00;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .like-dislike span {
+            color: #00ff00;
+            margin: 0 10px;
+        }
+        .reply-box {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 4px;
+            display: none;
+        }
+        .reply-input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #333;
+            background-color: #333;
+            color: #00ff00;
+        }
+        .reply-btn {
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .reply-btn:hover {
+            background-color: #0056b3;
+        }
+        .reply {
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #333;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>User Comments</h1>
+
+    <!-- Comment Input Section -->
+    <div class="comment-box">
+        <input id="username-input" class="username-input" type="text" placeholder="Your username...">
+        <textarea id="comment-input" class="comment-input" placeholder="Type your comment here..."></textarea>
+        <input id="file-input" class="file-input" type="file" accept="image/*,video/*">
+        <br>
+        <button id="submit-comment" class="submit-btn">Submit Comment</button>
+    </div>
+
+    <!-- Comments List Section -->
+    <div class="comments-list" id="comments-list">
+        <h2>All Comments:</h2>
+    </div>
+
+    <script>
+        // Get references to HTML elements
+        const submitButton = document.getElementById('submit-comment');
+        const commentInput = document.getElementById('comment-input');
+        const usernameInput = document.getElementById('username-input');
+        const fileInput = document.getElementById('file-input');
+        const commentsList = document.getElementById('comments-list');
+
+        let commentId = 0; // For generating unique comment IDs
+
+        // Function to create a comment element
+        function createCommentElement(username, commentText, file) {
+            // Create a new div element to display the comment
+            const newComment = document.createElement('div');
+            newComment.classList.add('comment');
+            newComment.dataset.commentId = commentId++;
+            
+            // Create and add the username and comment text to the newComment div
+            const usernameSpan = document.createElement('span');
+            usernameSpan.classList.add('username');
+            usernameSpan.textContent = username + ': ';
+            
+            const commentSpan = document.createElement('span');
+            commentSpan.textContent = commentText;
+
+            newComment.appendChild(usernameSpan);
+            newComment.appendChild(commentSpan);
+
+            // If a file is selected, add it to the comment
+            if (file) {
+                const fileURL = URL.createObjectURL(file);
+                if (file.type.startsWith('image/')) {
+                    const img = document.createElement('img');
+                    img.src = fileURL;
+                    newComment.appendChild(img);
+                } else if (file.type.startsWith('video/')) {
+                    const video = document.createElement('video');
+                    video.src = fileURL;
+                    video.controls = true;
+                    newComment.appendChild(video);
+                }
+            }
+
+            // Add like, dislike, and reply buttons
+            const likeDislike = document.createElement('div');
+            likeDislike.classList.add('like-dislike');
+
+            const likeButton = document.createElement('button');
+            likeButton.textContent = 'Like';
+            likeButton.addEventListener('click', () => {
+                likeCount.textContent = parseInt(likeCount.textContent) + 1;
+            });
+
+            const dislikeButton = document.createElement('button');
+            dislikeButton.textContent = 'Dislike';
+            dislikeButton.addEventListener('click', () => {
+                dislikeCount.textContent = parseInt(dislikeCount.textContent) + 1;
+            });
+
+            const likeCount = document.createElement('span');
+            likeCount.textContent = '0';
+            
+            const dislikeCount = document.createElement('span');
+            dislikeCount.textContent = '0';
+
+            likeDislike.appendChild(likeButton);
+            likeDislike.appendChild(dislikeButton);
+            likeDislike.appendChild(likeCount);
+            likeDislike.appendChild(dislikeCount);
+
+            newComment.appendChild(likeDislike);
+
+            // Add reply functionality
+            const replyButton = document.createElement('button');
+            replyButton.textContent = 'Reply';
+            replyButton.addEventListener('click', () => {
+                replyBox.style.display = 'block';
+            });
+
+            const replyBox = document.createElement('div');
+            replyBox.classList.add('reply-box');
+
+            const replyUsernameInput = document.createElement('input');
+            replyUsernameInput.classList.add('username-input');
+            replyUsernameInput.type = 'text';
+            replyUsernameInput.placeholder = 'Your username...';
+
+            const replyInput = document.createElement('textarea');
+            replyInput.classList.add('reply-input');
+            replyInput.placeholder = 'Type your reply here...';
+
+            const replySubmitButton = document.createElement('button');
+            replySubmitButton.classList.add('reply-btn');
+            replySubmitButton.textContent = 'Submit Reply';
+            replySubmitButton.addEventListener('click', () => {
+                const replyText = replyInput.value.trim();
+                const replyUsername = replyUsernameInput.value.trim();
+                if (replyText && replyUsername) {
+                    const reply = document.createElement('div');
+                    reply.classList.add('reply');
+                    reply.innerHTML = `<span class="username">${replyUsername} (Reply): </span>${replyText}`;
+                    newComment.appendChild(reply);
+                    replyInput.value = '';
+                    replyUsernameInput.value = '';
+                    replyBox.style.display = 'none';
+                } else {
+                    alert('Please enter both your username and reply before submitting.');
+                }
+            });
+
+            replyBox.appendChild(replyUsernameInput);
+            replyBox.appendChild(replyInput);
+            replyBox.appendChild(replySubmitButton);
+
+            newComment.appendChild(replyButton);
+            newComment.appendChild(replyBox);
+
+            return newComment;
+        }
+
+        // Add event listener to handle comment submission
+        submitButton.addEventListener('click', function() {
+            // Get the comment text, username, and file
+            const commentText = commentInput.value.trim();
+            const username = usernameInput.value.trim();
+            const file = fileInput.files[0]; // Get the selected file
+
+            // Check if the username and comment are not empty or file is selected
+            if (commentText !== '' || file) {
+                // Create and append the new comment to the comments list
+                const newComment = createCommentElement(username, commentText, file);
+                commentsList.appendChild(newComment);
+
+                // Clear the input boxes after submission
+                commentInput.value = '';
+                usernameInput.value = '';
+                fileInput.value = ''; // Clear the file input
+            } else {
+                alert('Please enter a comment or upload a file before submitting.');
+            }
+        });
+    </script>
+
+</body>
+</html>
